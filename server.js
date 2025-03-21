@@ -1,23 +1,15 @@
-const express = require('express');
-const supabase = require('./db');
+import express from 'express';
+import supabase from './db.js'; 
 
 const app = express();
 app.use(express.json());
 
-app.get('/users', async (req, res) => {
-    const { data, error } = await supabase.from('users').select('*');
-    if (error) return res.status(500).json({ error: error.message });
-    res.json(data);
+app.get("/api/data", (req, res) => {
+  res.json({ message: "Hello from Node.js Backend!", timestamp: new Date() });
 });
-
-// Route to add user
 app.post("/add-user", async (req, res) => {
   const { name, email } = req.body;
-
-  // Insert into Supabase
-  const { data, error } = await supabase
-      .from("users")
-      .insert([{ name, email }]);
+  const { data, error } = await supabase.from("users").insert([{ name, email }]);
 
   if (error) return res.status(400).json({ error: error.message });
 
@@ -25,6 +17,4 @@ app.post("/add-user", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-    console.log(`Backend running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
